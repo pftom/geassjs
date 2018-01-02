@@ -4,6 +4,12 @@ Lightweight, Blazing fast, based on [react](https://reactjs.org/), [redux](https
 
 Geass 是为了获取急速的开发速度而生的前端框架，它基于社区现有的优秀解决方案，并对其进行了一层简单的封装，力求在React的极简，Redux的可信赖，以及Angular的优秀之间取得一种合理的平衡。
 
+<div align="center">
+    <img width="500" heigth="800" src="./intuition.png">
+  <br>
+  <br>
+</div>
+
 # Features
 
 Geass 追求组件化，每个组件都是一个独立的单元，通过组合各种组件来完成应用程序的编写。

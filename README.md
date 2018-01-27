@@ -22,21 +22,41 @@ Geass 的每个组件包含三个文件，追求视图（使用React），样式
 
 Geass 提供 `dispatch` API方法将三类 Action（路由，Http请求，本地事件）统一化处理，强调明确你目前在做的事。
 
-- Http 请求：
+- Http 请求，示例如下：
 
   ```javascript
-  dispatch(
-    { type: [requestMethod]: string },
-    { name: [handleMethod]: string, payload?: [handlePayload]: string }
-  )
+  dispatch({ 
+      type: 'http',
+    	action: 'GET_REMOTE_USER', 
+      payload?: { id: 1 },
+  });
   ```
 
-  dispatch 有两个参数：
+  dispatch 有三个参数，两个必要参数和一个可选参数：
 
-- 第一个参数:：`{ type: [requestMethod]: string }`，requestMethod = 'http' | 'local' | 'route' ，分别代表Http请求，本地事件处理，以及路由动作的处理
-  - 第二个参数：`{ name: [handleMethod]: string, payload: [handlePayload]: string }` handleMethod 代表相应的处理函数和要传给处理函数的数据。
+- 第一个参数:：
 
-  然后这个 type，name，payload 又是一个数组，使得用户在一处可以进行多种类型事件的处理。
+  ```javascript
+  { type: typeName: String }
+  ```
+
+  typeName = 'http' | 'local' | 'route' ，表示对应的事件类型，分别代表Http请求，本地事件处理，以及路由动作的处理。
+
+- 第二个参数：
+
+  ```javascript
+  { action: actionName: String }
+  ```
+
+   actionName 代表着对应的动作名。
+
+- 第三个参数：
+
+  ```javascript
+  { payload?: payloadData: Object }
+  ```
+
+  payloadData代表本次动作需要传递的数据，可以为：null | Object 。
 
 
 接下来我将会一步一步的讲解这其中的奇思妙想。但是，在吃糖之前，让我们先卧薪尝胆一波。
@@ -90,7 +110,7 @@ class App extends Component {
 
 还不走？
 
-好吧，我知道你还想继续看下去，因为如果只是简单的进行上面的改进，那么Geass也就没有存在的必要了。
+好吧，我知道你还想继续看下去，因为如果只是简单的进行上面的改进，那么我也没有必要大张旗鼓的搞这么一个框架出来了。
 
 让我们再仔细想一想，然后，你会猛然惊醒...
 
@@ -117,19 +137,25 @@ class App extends Component {
     return (
       <div>
       	<p>{this.props.nowNumber}</p>
-      	<button onClick={
-      		dispatch(['local'], ['handlePlusNumber'])
-  		}>plus</button>
-        <button onClick={
-			dispatch(['local', ['handleMinusNumber']])
-        }>minus</button>
+      	<button onClick={() => {
+      	  dispatch({
+            type: 'local',
+            action: 'PLUS_NUMBER',
+          });
+  		  }}>plus</button>
+    	  <button onClick={() => {
+          dispatch({
+            type: 'local',
+            action: 'MINUS_NUMBER',
+          });
+	      }}>minus</button>
       </div>
     );
   }
 }
 ```
 
-怎么样？是不是非常清晰且有层次感，明确的 dispatch 告诉我们，此时从 view 层发出了一个动作，动作的一个参数代表这个动作的类型，动作的第二个参数代表相应的处理函数，这简直是一次声明代码的革命性呀！
+怎么样？是不是非常清晰且有层次感，明确的 dispatch 告诉我们，此时从 view 层发出了一个动作，动作的一个参数代表这个动作的类型，动作的第二个参数代表相应的动作名，这简直是一次声明代码的革命性呀！
 
 有些同学看了之后可能会想，这有什么？代码还不是这么长，即使是简单的单一动作都要写的这么复杂？我真的应该付出嘛？
 
@@ -180,7 +206,7 @@ import { Model } from 'geass';
      *
      */
     return { nowNumber: state.count.nowNumber };
-  }
+  },
 })
 export default class App {
   // reducer initial state
@@ -241,4 +267,12 @@ export default class App {
 }
 ```
 
-上面是一份总的代码清单，是我给自己拟出的一份大纲，基于以上的大纲，我将一步一步说明这份代码的含义。
+接下来我将一步一步讲解这份代码清单。
+
+现代的Web因为各种复杂应用的需求，一值在不断的进化，实际上越来越多的状态由前端来处理，前端与后端的职责在不断的分离，各自都更加专注于自己的领域。实际上，有心的同学可能会发现，Geass就像一个状态机一般，**Action** 作为引起状态变化的条件，**Reducer** 将目前的状态更新到下一个状态，**Connect** 负责将整个状态分发给多个子状态。
+
+我将基于**Action**，**Reducer**，**Connect** 做进一步扩展。
+
+### Action
+
+三大Action：localAction, routeAction, remoteAction，作为状态转换的触发者，它同时存在同步动作和异步动作，

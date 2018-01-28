@@ -67,6 +67,8 @@ Geass 提供 `dispatch` API方法将三类 Action（路由，Http请求，本地
 
 好的，接下来我们来讲一讲如何运用我们新介绍的这个 `API` 。我将通过对比的方式先例举现有可能React组件的写法，然后例举经过 `Geass` 改进之后的React组件的写法。
 
+#### 原始React组件
+
 在原始的React里面，你可能会写出如下的代码：
 
   举例如下：
@@ -115,7 +117,7 @@ Geass 提供 `dispatch` API方法将三类 Action（路由，Http请求，本地
 
   - 我们就能很清晰的从表面就能解读事件背后所做的工作，而不需要深入到代码的细节。
 
-  - 在出现错误的时候，我们能根据清楚，语义化的函数名，快速定位错误来源，和了解到时候会有相互影响的状态。
+  - 在出现错误的时候，我们能根据清楚，语义化的函数名，在错误堆栈中快速定位错误来源，和了解到时候会有相互影响的状态。
 
   - 在以后维护代码时，自己能很快的对整个代码有个明确的了解。
 
@@ -156,6 +158,8 @@ Geass 提供 `dispatch` API方法将三类 Action（路由，Http请求，本地
 
 如果在整个团队合作时，出现了像上面一样冗长的函数名，那么光是理解上来就要花成吨的时间，这可不是一个好做法，写代码本应该是一件享受的事，不是嘛？
 
+#### Geass下的React组件
+
 好的，接下来，就让你体会一下什么叫做超爽的开发体验。让我们来写一个经过Geass改进后的React组件。
 
 先看例子：
@@ -169,11 +173,12 @@ Geass 提供 `dispatch` API方法将三类 Action（路由，Http请求，本地
         <div>
           <p>{this.props.nowNumber}</p>
           <button onClick={() => {
-            dispatch({
-              type: ['local'],
-              name: 'PLUS_NUMBER',
-            });
-          }}>
+              dispatch({
+                type: ['local'],
+                name: 'PLUS_NUMBER',
+              });
+            }
+          }>
             plus
           </button>
         </div>
@@ -182,39 +187,62 @@ Geass 提供 `dispatch` API方法将三类 Action（路由，Http请求，本地
   }
 ```
 
-怎么样？是不是非常清晰且有层次感：
+怎么样？是不是非常清晰且有层次感：【 偷笑 】
 
-  - 明确的 `dispatch` 告诉我们，此时从 `view` 层主动发出了一个动作（`Action`），
+  - 明确的 `dispatch` 告诉我们，此时从 `view` 层主动发出了一个动作（`Action`）
   
   - 动作的第一个参数代表这个动作的类型，动作的第二个参数代表相应的动作名，
   
-这简直是一次声明代码的革命性呀！
+这简直是一次声明代码的革命性呀！【 再次偷笑 】
 
 咳咳，稳重一点。有些同学看了之后可能会想，这有什么？代码还不是这么长，即使是简单的单一动作都要写的这么复杂？我真的应该付出嘛？
 
-其实我觉得这种付出是非常有必要的，请看接下来的扩展：
+其实我觉得这种付出是非常有必要的：
+
+  - 层次结构是非常清晰的，以后的以后，除开 `dispatch` 调用的内容外，其他的都可以不看。
+
+  - 通过 `type`, `name`, `payload` 一眼就能判断这个动作发生了什么事，改变了那些状态，特别便于维护。
+
+  - 主动的发出请求，而不是被动的指定处理函数，有一种掌控感。
 
 如果 `handlePlusNumber` 那个函数内部还做了对路由状态的改变，我们可以这么写：
 
 ```javascript
-dispatch(['local', 'handlePlusNumber'], ['route', 'handleChangeRoute'])
+  <button onClick={() => {
+      dispatch({
+        type: ['local', 'route'],
+        name: 'PLUS_NUMBER',
+      });
+    }
+  }>
+    plus
+  </button>
 ```
 
-数组中的相应项对应相应的处理函数，怎么样？是不是感觉炫一点了，顾虑应该也消却了很多吧！
+怎么样？是不是感觉炫一点了，顾虑应该也消却了很多吧！我们可以不停的增加会影响的状态，虽然这一 `字段` 看起来有点多余，但是 **声明性** 的效果确是达到了。
 
-哈哈哈，我们在一次调用里面，做了两件事，处理了两种情况，并标注了每件情况对应的类型和相应的处理函数，每个处理函数都只做一件类型的事，这样，我们完成本次代码的编写之后，发布上线，等到其他人来看这段代码时，我们基于约定，就能很容易的确认这段代码做了什么事，而不用深入了解其处理函数背后的细节，大大有利于团队之间的沟通和交流，对代码的可维护性给予了一击重击。
+哈哈哈，我们在一次调用里面，做了一件事，影响了两种状态，并标注了每种状态对应的类型。这样，我们完成本次代码的编写之后，发布上线，等到其他人来看这段代码时，我们基于约定，就能很容易的确认这段代码做了什么事，而不用深入了解其处理函数背后的细节，大大有利于团队之间的沟通和交流，对代码的可维护性给予了一击重击。
 
 我们还可以基于此做非常多的扩展，例如我们可以再加上一个处理动作，我们还要对远程服务器的 nowNumber 进行修改，我们可以这样写：
 
 ```javascript
-dispatch(
-  ['local', 'handlePlusNumber'], 
-  ['route', 'handleChangeRoute'],
-  ['remote', 'handleChangeServer'],
-)
+  <button onClick={() => {
+      dispatch({
+        type: ['local', 'route'],
+        name: 'PLUS_NUMBER',
+      });
+
+      dispatch({
+        type: ['remote'],
+        name: 'FETCH_NOW_NUMBER',
+        payload: { userId: 1 },
+      });
+  }}>
+    plus
+  </button>
 ```
 
-现在你发现了吧，我们不仅让动作更加的明确了，而且让一次动作可以完成多种操作，这可能就是一种革新吧。
+现在你发现了吧，我们只是提供了一个最基础的事件发射器，而且还是基于现有的 `Redux` 的 `dispatch`，只是让它变得更加声明化了。
 
 ### 组件
 
@@ -225,79 +253,69 @@ dispatch(
 基于以上的的状态，我们标准的Geass 组件可能会这样写：
 
 ```javascript
-// app.component.js
-import { Model } from 'geass';
+  // app.component.js
+  import { Model } from 'geass';
 
-@Model({
-  selector: 'app',
-  template: 'app.view.js',
-  style: 'app.style.css',
-  connect: (state) => {
+  @Model({
+    selector: 'app',
+    template: 'app.view.js',
+    style: ['app.style.css'],
+    connect: (state) => {
+      /**
+      * use connect to pass the data to the component
+      * 
+      * every component manage itself state: decoupling
+      *
+      */
+      return { count: state.count };
+    },
+  })
+  export default class App {
+    // reducer initial state
+    state = {
+      nowNumber: 0,
+    };
+
     /**
-     * use connect to pass the data to the component
-     * Also, Component 
-     *
-     */
-    return { nowNumber: state.count.nowNumber };
-  },
-})
-export default class App {
-  // reducer initial state
-  state = {
-    nowNumber: 0,
-  };
+    * The following three types of actions 
+    * describe the fact that something happened.
+    *
+    * These actions will directly dispatch action to store, and let reducer 
+    * update state
+    */
 
-  /**
-   * The following three types of actions 
-   * describe the fact that something happened.
-   *
-   * These actions will directly dispatch action to store, and let reducer 
-   * update state
-   */
+    // handle local action
+    effects = {
+      plusNumber(payload) {
+        dispatch({ type: 'plus', payload });
+      },
+      // handle async plus logic, 
+      *handlePlusNumber() {
+        // this.props 是全局的资源分发中心，任何插件都在其上绑定。
+        const { call, put, delay } = this.props;
+        // 推辞1秒处理，模仿异步流程
+        yield delay(1000);
+        // 像store发出 minus 动作，reducer更新state
+        yield put({ type: 'minus' });
+      },
+    };
 
-  // handle local action
-  localAction = {
-    handlePlusNumber() {
-      dispatch({ type: 'plus' });
-    },
-    // handle async plus logic, 
-    *handlePlusNumber() {
-      // this.props 是全局的资源分发中心，任何插件都在其上绑定。
-      const { call, put, delay } = this.props;
-      // 推辞1秒处理，模仿异步流程
-      yield delay(1000);
-   	  // 像store发出 minus 动作，reducer更新state
-      yield put({ type: 'minus' });
-  	},
-  };
-
-  // handle route action if exist
-  routeAction = {
-	handleChangeRoute() {}
-  };
-
-  // handle remote action is exist
-  remoteAction = {
-    // use redux-saga handle async action
-	*handleChangeServer() {}
-  };
-
-  /**
-   * Reducers describe the state changes in response
-   * reducer is the only one which can update state
-   *
-   */
-  reducers = {
-    plus(state) {
-      const newNumber = state.nowNumber + 1;
-      return { ...state, nowNumber: newNumber };
-    },
-    minus(state) {
-      const newNumber = state.nowNumber - 1;
-      return { ...state, nowNumber: newNumber };
- 	},
-  };
-}
+    /**
+    * Reducers describe the state changes in response
+    * reducer is the only one which can update state
+    *
+    */
+    reducers = {
+      plus(state) {
+        const newNumber = state.nowNumber + 1;
+        return { ...state, nowNumber: newNumber };
+      },
+      minus(state) {
+        const newNumber = state.nowNumber - 1;
+        return { ...state, nowNumber: newNumber };
+      },
+    };
+  }
 ```
 
 接下来我将一步一步讲解这份代码清单。

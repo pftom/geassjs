@@ -1,6 +1,6 @@
 ```javascript
   // app.view.js
-  import React, { Component } from 'react';
+  import React, { Component, PureComponent } from 'geassjs/react';
 
   // generate component => automate import stylesheet
   import './app.style.css';
@@ -15,10 +15,12 @@
 ```javascript
   // app.component.js
   // 外部提供的API
+  // Component 是React原生的，Model是一个装饰器函数
   import { Model } from 'geassjs';
+  import { Component, PureComponent } from 'geassjs/react';
 
   // 内部自动使用
-  import { connect } from 'geassjs/react-redux';
+  import { connect } from 'react-redux';
 
   // import View Component
   import AppView from './app.view.js';
@@ -29,7 +31,7 @@
       return { count: state.count };
     },
   })
-  export class AppComponent {
+  export class AppComponent extends Component {
 
   }
 
@@ -74,7 +76,7 @@
 
 想法完成：使用装饰器（decorator）来内部封装以下东西：
 
-  - 对 `Component` 的继承
+  - 对 `Component` 的继承 [x]- 使用了原生继承自React的 Component
 
   - connect 高阶函数的使用 [√]
 

@@ -23,7 +23,9 @@
     };
 
     // handle async task
-    effects = {
+    // 我想将这个异步处理中心叫做调度：schedule， 
+    // 因为它控制着接收这个组件的所有异步任务，并且处理之后，分发更新状态的请求。
+    schedule = {
       *add(action) {
         const { put, call, delay } = this.props;
         yield call(delay, 1000);
@@ -101,9 +103,22 @@
           name: 'app/add',
         })}>+</button>
 
+        // this button. name is under namespace: app
         <button onClick={() => dispatch({
           type: ['local'],
           name: { value: 'add', namespace: 'app' },
+        })}>+</button>
+
+        // this button
+        <button onClick={() => dispatch({
+          type: ['local'],
+          name: { value: 'add', namespace: '' },
+        })}>+</button>
+
+        // or this button is the global scope
+        <button onClick={() => dispatch({
+          type: ['local'],
+          name: { value: 'add' },
         })}>+</button>
       )
     }

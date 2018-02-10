@@ -1,6 +1,6 @@
 下面是 Router 部分，使用 React-Router v4 ，Dynamic Router
 
-动态路由，路由就相当于 Component，所以不用特殊对待
+动态路由，路由就相当于 Component，所以不用特殊对待，这里只是做个例子。
 
 ```javascript
   import {

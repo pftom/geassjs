@@ -79,13 +79,12 @@
     return function (target) {
       // handle react component
       target.prototype.render = () => {
-        return <template />;
+        return (
+          connect(mapStateToProps, mapDispatchToProps)(template)
+        );
       };
 
       target.prototype.namespace = namespace;
-
-      // handle connect mapStateToProps
-      return connect(mapStateToProps, mapDispatchToProps)
     }
   }
 ```

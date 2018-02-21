@@ -1,0 +1,4 @@
+- 将所有的Reducer and Namespace桥接
+- 将所有的Schedule与Redux Saga桥接
+- 完成Store的创建，暴露出用户可以自定义的接口
+- 完成全局Plugin System

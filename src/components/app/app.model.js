@@ -7,7 +7,7 @@ import AppView from './app.view';
   namespace: 'app',
   template: AppView,
   mapStateToProps: (state) => {
-    const { current, record } = state;
+    const { current, record } = state.app;
 
     return {
       current,
@@ -17,7 +17,8 @@ import AppView from './app.view';
 })
 export default class AppModel extends Component {
   state = {
-    count: 0,
+    current: 0,
+    record: 0,
   };
 
   schedule = {
@@ -29,6 +30,7 @@ export default class AppModel extends Component {
   };
 
   reducer = {
+    // add or minus represent action name
     add(state) {
       const newCurrent = state.current + 1;
 

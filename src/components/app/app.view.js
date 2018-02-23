@@ -6,11 +6,13 @@ export default class AppView extends Component {
     return (
       <div>
         <button onClick={() => dispatch({
-          type: ['local'],
-          name: { value: 'add', namespace: 'app' },
+          type: 'app/add'
         })}>+</button>
         <p>{current}</p>
         <p>{record}</p>
+        <button onClick={() => dispatch({
+          type: 'HELLO_GEASS'
+        })}>hello</button>
       </div>
     );
   }

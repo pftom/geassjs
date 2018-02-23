@@ -17,12 +17,12 @@ export function Model({
     };
 
     // get the initialState & reducers & schedules
-    const { state, reducer, schedule } = new target();
+    const { state, reducer, saga } = new target();
     dynamicInjectStore({
       namespace,
       state,
       reducer,
-      schedule,
+      saga,
     });
 
     target.prototype.namespace = namespace;

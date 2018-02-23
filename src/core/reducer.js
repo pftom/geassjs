@@ -17,23 +17,28 @@ function createStandardReducer(namespace = '', initialState = {}, reducer = {}) 
       return state;
     }
 
-    // this var is about judge reducer action match case
-    let judgeCondition = '';
-
-    // if is not in this namespace, return state
-    if (Object.keys(action).includes('name')) {
-      if (action.name.namespace !== namespace) {
-        return state;
-      }
-
-      judgeCondition = action['name'].value;
-    } else {
-      judgeCondition = action['type'];
-    }
-
     let isCaseCompleted = false;
+    console.log('action', action, namespace);
 
     for (let [actionName, reducerHandler] of Object.entries(reducer)) {
+      // this var is about judge reducer action match case
+      let judgeCondition = '';
+  
+      // 将action: namespace/actionName, 分离，进行判断
+      const splitedToNamespaceAndAction = action.type.split('/');
+      // if is not in this namespace, return state
+      if (splitedToNamespaceAndAction.length === 2) {
+        if (splitedToNamespaceAndAction[0] !== namespace) {
+          return state;
+        }
+  
+        judgeCondition = splitedToNamespaceAndAction[1];
+      } else {
+        judgeCondition = action.type;
+      }
+
+      console.log('actionName', actionName)
+      console.log('judgeCondition', judgeCondition);
       if (judgeCondition === actionName) {
         if (typeof reducerHandler !== 'function') {
           throw new Error('reducer item must be a function.');
@@ -52,7 +57,6 @@ function createStandardReducer(namespace = '', initialState = {}, reducer = {}) 
 }
 
 export function addReducer(newComponent) {
-  console.log('component', newComponent);
   const { namespace, reducer, state } = newComponent;
 
   // construt standard reducer function

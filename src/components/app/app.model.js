@@ -21,9 +21,9 @@ export default class AppModel extends Component {
     record: 0,
   };
 
-  schedule = {
+  saga = {
     // 让saga effects 方法触手可及
-    *add(action, { put, call, delay }) {
+    *add({ call, put, delay }, action) {
       yield call(delay, 1000);
       yield put({ type: 'minus' });
     },

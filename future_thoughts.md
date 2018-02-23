@@ -4,7 +4,7 @@
 
 3.兼容现有的Redux的写法
  
-  - `Reducer` 里面 `Switch` 语句是对 `action.type` 进行判断。
+  - `Reducer` 里面 `Switch` 语句是对 `action.type` 进行判断。[√]
 
 4.支持响应式，自己变。自动化
 
@@ -17,3 +17,21 @@
 8.支持服务端渲染，nextjs
 
 9.支持流行的 Webpack或者Parcel打包
+
+10.支持函数式的
+
+```javascript
+  dispatch({ 
+    type: ['local'],
+    name: { value: 'actionName', namespace: 'app' },
+  });
+```
+
+目前使用:
+
+```javascript
+  dispatch({
+    type: 'namespace/actionName'
+    payload,
+  })
+```

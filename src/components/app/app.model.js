@@ -1,7 +1,10 @@
-import Model from '../../core/';
-import { Component } from '../../core/react';
+import {
+  Model,
+  Component,
+} from '../../core/';
 
 import AppView from './app.view';
+import './app.style.css';
 
 @Model({
   namespace: 'app',

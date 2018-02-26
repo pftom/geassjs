@@ -10,7 +10,7 @@ const sagaMiddleware = createSagaMiddleware();
 
 let middlewares = [
   createLogger(),
-  sagaMiddleware
+  sagaMiddleware,
 ];
 
 export let store = createStore(rootReducer, applyMiddleware(...middlewares));

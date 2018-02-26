@@ -1,20 +1,21 @@
 import { Model } from './model';
+import Geass from './start';
 import {
   reduxSaga,
   reduxSagaEffects,
   reduxSagaUtils,
 } from './reduxSaga';
 
-// 全局props，每个component都能读取到这个props，一次导入，处处使用
-const props = {
-  // redux-saga api
-  ...reduxSaga,
-  ...reduxSagaEffects,
-  ...reduxSagaUtils,
+// export all react packages
+import React, { Component, PureComponent } from 'react';
+
+export { 
+  React,
+  Component,
+  PureComponent,
+
+  Model,
 };
 
 
-export default Model;
-export {
-  props,
-}
+export default Geass;

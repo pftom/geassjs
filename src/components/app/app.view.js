@@ -1,4 +1,4 @@
-import { React, Component, PureComponent } from '../../core/react';
+import { React, Component, PureComponent } from '../../core/';
 
 export default class AppView extends Component {
   render() {
@@ -10,9 +10,6 @@ export default class AppView extends Component {
         })}>+</button>
         <p>{current}</p>
         <p>{record}</p>
-        <button onClick={() => dispatch({
-          type: 'HELLO_GEASS'
-        })}>hello</button>
       </div>
     );
   }

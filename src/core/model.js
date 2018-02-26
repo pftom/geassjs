@@ -4,6 +4,9 @@ import React from 'react';
 // import for dynamic update store reducer, saga and more...
 import { dynamicInjectStore } from './store';
 
+// global props plugin system
+import { plugins } from './plugin';
+
 export function Model({
   namespace,
   template,
@@ -13,7 +16,7 @@ export function Model({
     // use decorator for render template, higher-order function
     const TargetComponent = connect(mapStateToProps)(template);
     target.prototype.render = () => {
-      return <TargetComponent />;
+      return <TargetComponent {...plugins} />;
     };
 
     // get the initialState & reducers & schedules

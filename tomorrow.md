@@ -6,6 +6,12 @@
 ## 2018 年 2 月 26 日
 
 - 形成 redux store 可配置
+
+  - app.use()，单个插件
+
+  - app.useAll()，一堆插件
+
+
 - 注意开发和生产环境（体现在Redux Store）
 - 开始使用Redux 生态圈增强Geass
   - plain object or immutable

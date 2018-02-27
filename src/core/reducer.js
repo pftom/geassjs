@@ -18,7 +18,6 @@ function createStandardReducer(namespace = '', initialState = {}, reducer = {}) 
     }
 
     let isCaseCompleted = false;
-    console.log('action', action, namespace);
 
     for (let [actionName, reducerHandler] of Object.entries(reducer)) {
       // this var is about judge reducer action match case
@@ -37,14 +36,11 @@ function createStandardReducer(namespace = '', initialState = {}, reducer = {}) 
         judgeCondition = action.type;
       }
 
-      console.log('actionName', actionName)
-      console.log('judgeCondition', judgeCondition);
       if (judgeCondition === actionName) {
         if (typeof reducerHandler !== 'function') {
           throw new Error('reducer item must be a function.');
         }
         isCaseCompleted = true;
-        console.log('state', state);
         return reducerHandler(state);
       }
     }

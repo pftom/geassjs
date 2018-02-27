@@ -12,7 +12,7 @@ export function* rootSaga() {
 let sagas = [];
 
 function createStandardWatchSaga(namespace, saga) {
-  const { take, call, takeEvery } = reduxSagaEffects;
+  const { takeEvery } = reduxSagaEffects;
 
   // judge empty
   if (!saga || Object.keys(saga).length === 0) {
@@ -31,7 +31,6 @@ function createStandardWatchSaga(namespace, saga) {
       );
     }
 
-    console.log('newWatchSaga', newWatchSaga);
     // add new watch saga into array
     newSagaArray.push(newWatchSaga);
   }

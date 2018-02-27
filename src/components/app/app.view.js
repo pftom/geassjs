@@ -1,4 +1,4 @@
-import { React, Component, PureComponent } from '../../core/';
+import { React, Component } from '../../core/';
 
 export default class AppView extends Component {
   render() {

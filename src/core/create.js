@@ -15,19 +15,35 @@ import {
 
 export function create() {
 
+  let plugin = new Plugin();
+  // use and useAll for add store enhancer, middleware.
+  // add and addAll for add single global props.
+  // start for setup all app,
   const app = {
     _store: null,
+    _reducers: null,
+    _middlewares: null,
+    _sagas: null,
     _plugin: plugin,
-    use: plugin.use.bind(plugin),
-    useAll: plugin.useAll.bind(plugin),  
-  }
+    useEnhancer: plugin.useEnhancer.bind(plugin),
+    useAllEnhancer: plugin.useAllEnhancer.bind(plugin), 
+    useMiddleware:  plugin.useMiddleware.bind(plugin),
+    useAllMiddleware: plugin.useAllMiddleware.bind(plugin),
+    addProps: plugin.addProps.bind(plugin),
+    addAllProps: plugin.addAllProps.bind(plugin),
+    start,
+  };
+  return app;
 
   function start() {
 
+    // construct saga middleware
+    const sagaMiddleware = createSagaMiddleware();
+    
+    app._middlewares = [sagaMiddleware];
+
   }
 }
-
-const sagaMiddleware = createSagaMiddleware();
 
 // use let for later modify it
 let middlewares = [

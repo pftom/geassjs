@@ -2,12 +2,6 @@ import * as reduxSaga from 'redux-saga';
 import * as reduxSagaEffects from 'redux-saga/effects';
 import * as reduxSagaUtils from 'redux-saga/utils';
 
-export function* rootSaga() {
-  const { take } = reduxSagaEffects;
-  yield take('HELLO_GEASS');
-  console.log('Happy Hacking!');
-}
-
 // sagas array
 let sagas = [];
 
@@ -38,7 +32,7 @@ function createStandardWatchSaga(namespace, saga) {
   return newSagaArray;
 }
 
-export function addSaga(newComponent) {
+function addSaga(newComponent) {
   const { saga, namespace } = newComponent;
   const { all } = reduxSagaEffects;
 
@@ -57,4 +51,6 @@ export {
   reduxSaga,
   reduxSagaEffects,
   reduxSagaUtils,
+
+  addSaga,
 }

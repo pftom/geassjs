@@ -1,91 +1,115 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
-import { createLogger } from 'redux-logger';
-import { persistState } from 'redux-devtools';
-import { createStore, applyMiddleware, compose } from 'redux';
+import { Provider } from 'react-redux';
+import { applyMiddleware, compose } from 'redux';
+import { take } from 'redux-saga/effects';
 
 import registerServiceWorker from './registerServiceWorker';
+import configureStore from './store/configureStore';
+import { addReducer } from './reducer';
+import { addSaga } from './reduxSaga';
 
-// import devtools
-import {
-  DevTools,
-} from './enhancers/';
+export default class App {
+  constructor(plugin) {
+    this._store = null;
+    this._reducers = [];
+    this._sagas = [];
 
-export function create() {
-
-  let plugin = new Plugin();
-  // use and useAll for add store enhancer, middleware.
-  // add and addAll for add single global props.
-  // start for setup all app,
-  const app = {
-    _store: null,
-    _reducers: null,
-    _middlewares: null,
-    _sagas: null,
-    _plugin: plugin,
-    useEnhancer: plugin.useEnhancer.bind(plugin),
-    useAllEnhancer: plugin.useAllEnhancer.bind(plugin), 
-    useMiddleware:  plugin.useMiddleware.bind(plugin),
-    useAllMiddleware: plugin.useAllMiddleware.bind(plugin),
-    addProps: plugin.addProps.bind(plugin),
-    addAllProps: plugin.addAllProps.bind(plugin),
-    start,
-  };
-  return app;
-
-  function start() {
-
-    // construct saga middleware
-    const sagaMiddleware = createSagaMiddleware();
+    // production or development
+    this._middlewares = null;
+    this._enhancers = null;
     
-    app._middlewares = [sagaMiddleware];
+    this._plugin = plugin;
 
-  }
-}
-
-// use let for later modify it
-let middlewares = [
-  createLogger(),
-  sagaMiddleware,
-];
-
-// use let for later modify it
-let enhancers = [
-  applyMiddleware(...middlewares),
-  DevTools.instrument(),
-  persistState(getDebugSessionKey()),
-];
-
-let Geass = {};
-
-function start(RootComponent) {
-  const Root = (
-    <Provider store={store}>
-      <RootComponent />
-    </Provider>
-  );
-  // execulate init work
-  ReactDOM.render(Root, document.getElementById('root'));
-  registerServiceWorker();
-}
-
-function dynamicInjectStore(newComponent) {
-  // if this newComponent have reducer item
-  if (newComponent.reducer) {
-    const newRootReducer = addReducer(newComponent);
-    store.replaceReducer(newRootReducer)
+    this.useEnhancer = plugin.useEnhancer.bind(plugin);
+    this.useAllEnhancers = plugin.useAllEnhancers.bind(plugin);
+    this.useMiddleware =  plugin.useMiddleware.bind(plugin);
+    this.useAllMiddlewares = plugin.useAllMiddlewares.bind(plugin);
+    this.useProp = plugin.useProp.bind(plugin);
+    this.useAllProps = plugin.useAllProps.bind(plugin);
   }
 
-  // if this newComponent have saga item
-  if (newComponent.saga) {
-    const newRootSaga = addSaga(newComponent);
+  start = (
+    RootComponent, 
+    initialState = {},
+  ) => {
+    // store global reducer object, and can dynamic change
+    const rootReducer = {
+      // later add redux-route info
+      route: (state = {}, action) => { return state; },
+    };
 
-    // re-run the rootSaga
-    sagaMiddleware.run(newRootSaga);
+
+    // initial root saga
+    const rootSaga = function* () {
+      yield take('HELLO_GEASS');
+      console.log('Happy Hacking!');
+    }
+
+    // if store is not created
+    if (!this._store) {
+      this._createStore(initialState, rootReducer, rootSaga);
+    }
+
+    // start rendering app
+    this._render();
+  }
+
+  _createStore = (
+    initialState = {}, 
+    rootReducer, 
+    rootSaga
+  ) => {
+    // get all applied middleware and sagas
+    this._middlewares = this._plugin.get('middlewares');
+    this._enhancers = this._plugin.get('enhancers');
+
+    // construct a special middleware called: sagaMiddleware
+    // before start, all other middlewares is added,
+    // so, sagaMiddleware is the last middleware in this._middlewars
+    const sagaMiddleware = createSagaMiddleware();
+    this._plugin.useMiddleware(sagaMiddleware, 'common');
+
+    // construct single redux store
+    this._store = configureStore(
+      initialState, 
+      this._middlewares,
+      this._enhancers,
+      rootReducer,
+    );
+
+    // then run the saga 
+    sagaMiddleware.run(rootSaga);
+  }
+
+  _render = () => {
+    // jsx syntax, so should include React from 'react'
+    const Root = (
+      <Provider store={this._store}>
+        <RootComponent />
+      </Provider>
+    );
+    // execulate init work
+    ReactDOM.render(Root, document.getElementById('root'));
+    registerServiceWorker();
+  }
+
+  _injectModel = (newComponent) => {
+    // if this newComponent have reducer item
+    if (newComponent.reducer) {
+      const newRootReducer = addReducer(newComponent);
+      this._store.replaceReducer(newRootReducer)
+    }
+  
+    // if this newComponent have saga item
+    if (newComponent.saga) {
+      const newRootSaga = addSaga(newComponent);
+  
+      const middlewares = this._middlewares;
+      const sagaMiddleware = middlewares[middlewares.length - 1];
+      // re-run the rootSaga
+      sagaMiddleware.run(newRootSaga);
+    }
   }
 }
-
-Geass.start = start;
-export default Geass;

@@ -1,14 +1,7 @@
 import { combineReducers } from 'redux';
 import { dynamicInjectStore } from './store';
 
-const initialState = {};
 const reducerObj = {};
-
-// store global reducer object, and can dynamic change
-const rootReducer = {
-  // later add redux-route info
-  route: (state = {}, action) => { return state; },
-};
 
 function createStandardReducer(namespace = '', initialState = {}, reducer = {}) {
   return function innerStandardReducer(state = initialState, action) {
@@ -52,7 +45,7 @@ function createStandardReducer(namespace = '', initialState = {}, reducer = {}) 
   }
 }
 
-export function addReducer(newComponent) {
+function addReducer(newComponent) {
   const { namespace, reducer, state } = newComponent;
 
   // construt standard reducer function
@@ -62,6 +55,6 @@ export function addReducer(newComponent) {
   return combineReducers(reducerObj);
 }
 
-
-// combine all reducer to a single root reducer, and export it
-export default combineReducers(rootReducer);
+export {
+  addReducer,
+}

@@ -4,8 +4,40 @@
   *
   */
 
-export let plugins = {};
+export default class Plugin {
+  constructor() {
+    this.middlewares = { prod: [], dev: [], common: [] };
+    this.enhancers = { prod: [], dev: [], common: [] };
+    this.sagas = [];
+    this.reducers = [];
+    this.props = [];
+  }
 
-export function addPlugins(extraPlugins = []) {
-  plugins = { ...plugins, ...extraPlugins };
+  useEnhancer = (enhancer, env) => {
+    this.enhancers[env].push(enhancer);
+  }
+
+  useAllEnhancers = (allEnhancers, env) => {
+    this.enhancers[env].push(...allEnhancers);
+  }
+
+  useMiddleware = (middleware, env) => {
+    this.middlewares[env].push(middleware);
+  }
+
+  useAllMiddlewares = (middlewares, env) => {
+    this.middlewares[env].push(...middlewares);
+  }
+
+  useProp = (prop) => {
+    this.props.push(prop);
+  }
+
+  useAllProps = (allProps) => {
+    this.props.push(...allProps);
+  }
+
+  get = (key) => {
+    return this[key];
+  }
 }

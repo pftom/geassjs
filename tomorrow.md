@@ -29,3 +29,8 @@
 - Use in Reactnative，Electron
 - 路由
 - 一些动画过渡的加入。【Css生态圈】
+
+## 2018 年 3 月 03 日
+
+_createStore 允许提前创建Store，做配置
+ 配置react-redux-router

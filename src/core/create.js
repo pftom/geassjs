@@ -7,8 +7,10 @@ import { take } from 'redux-saga/effects';
 
 import registerServiceWorker from './registerServiceWorker';
 import configureStore from './store/configureStore';
-import { addReducer } from './reducer';
-import { addSaga } from './reduxSaga';
+import {
+  addReducer,
+  addSaga,
+} from './util';
 
 export default class App {
   constructor(plugin) {
@@ -53,7 +55,7 @@ export default class App {
     }
 
     // start rendering app
-    this._render();
+    this._render(RootComponent);
   }
 
   _createStore = (
@@ -83,7 +85,7 @@ export default class App {
     sagaMiddleware.run(rootSaga);
   }
 
-  _render = () => {
+  _render = (RootComponent) => {
     // jsx syntax, so should include React from 'react'
     const Root = (
       <Provider store={this._store}>

@@ -1,13 +1,8 @@
-import { Model } from './model';
-import Geass from './start';
-import {
-  reduxSaga,
-  reduxSagaEffects,
-  reduxSagaUtils,
-} from './reduxSaga';
-
 // export all react packages
 import React, { Component, PureComponent } from 'react';
+
+import { Model } from './model';
+const { setup } = require('./setup');
 
 export { 
   React,
@@ -18,4 +13,4 @@ export {
 };
 
 
-export default Geass;
+export default setup;

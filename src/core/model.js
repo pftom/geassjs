@@ -1,17 +1,23 @@
-import { connect } from 'react-redux';
 import React from 'react';
+import { connect } from 'react-redux';
 
 // import for dynamic update store reducer, saga and more...
-import { app } from './setup';
+let app = {};
 
-export function Model({
+function dynamicGetApp(_app) {
+  console.log('dynamic');
+  app = _app;
+}
+
+function Model({
   namespace,
   template,
   mapStateToProps = () => {},
 }) {
   return function innerModel(target) {
     // get use for global props
-    const props = app._plugin.get('props');
+    console.log('plugin', app)
+    const props = app._plugin;
     
     // use decorator for render template, higher-order function
     const TargetComponent = connect(mapStateToProps)(template);
@@ -21,13 +27,18 @@ export function Model({
 
     // get the initialState & reducers & schedules
     const { state, reducer, saga } = new target();
-    app._injectModel({
-      namespace,
-      state,
-      reducer,
-      saga,
-    });
+    // app._injectModel({
+    //   namespace,
+    //   state,
+    //   reducer,
+    //   saga,
+    // });
 
     target.prototype.namespace = namespace;
   }
+}
+
+export {
+  dynamicGetApp,
+  Model,
 }

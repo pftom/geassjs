@@ -1,13 +1,9 @@
-import { createLogger } from 'redux-logger';
-import { persistState } from 'redux-devtools';
-
 import App from './create';
 import Plugin from './plugin';
-import {
-  DevTools,
-} from './enhancers/';
+import defaultEnhancers from './enhancers/';
+import defaultMiddlewares from './middlewares/';
 
-export default function Create() {
+export default function setup() {
   // create plugin instance
   const plugin = new Plugin();
 
@@ -20,30 +16,14 @@ export default function Create() {
   }
 
   // add this framework default enhancers
-  app.useAllEnhancers(
-    [
-      DevTools.instrument(),
-      persistState(getDebugSessionKey()),
-    ],
-    'dev',
-  );
+  app.useAllEnhancers(defaultEnhancers, 'dev');
 
   // add this framework default middlewares
-  app.useAllMiddlewares(
-    [
-      createLogger(),
-    ],
-    'dev',
-  );
+  app.useAllMiddlewares(defaultMiddlewares, 'dev');
 
   // add this framework default props
   app.useAllProps([]);
 
   // return app instance
   return app;
-}
-
-function getDebugSessionKey() {
-  const matches = window.location.href.match(/[?&]debug_session=([^&#]+)\b/);
-  return (matches && matches.length > 0)? matches[1] : null;
 }

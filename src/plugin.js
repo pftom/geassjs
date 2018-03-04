@@ -10,7 +10,7 @@ export default class Plugin {
     this.enhancers = { prod: [], dev: [], common: [] };
     this.sagas = [];
     this.reducers = [];
-    this.props = [];
+    this.props = {};
   }
 
   useEnhancer = (enhancer, env) => {
@@ -27,14 +27,6 @@ export default class Plugin {
 
   useAllMiddlewares = (middlewares, env) => {
     this.middlewares[env].push(...middlewares);
-  }
-
-  useProp = (prop) => {
-    this.props.push(prop);
-  }
-
-  useAllProps = (allProps) => {
-    this.props.push(...allProps);
   }
 
   get = (key) => {

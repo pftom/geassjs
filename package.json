@@ -1,7 +1,11 @@
 {
-  "name": "geass",
+  "name": "geassjs",
   "version": "0.1.0",
-  "private": true,
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "pftom <1043269994@qq.com>",
+  "license": "MIT",
   "dependencies": {
     "invariant": "^2.2.3",
     "react": "^16.2.0",

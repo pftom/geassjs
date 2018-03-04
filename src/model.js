@@ -7,9 +7,7 @@ function Model({
   template,
   mapStateToProps = () => {},
 }) {
-  return function innerModel(target) {
-    // get use for global props
-    let props = {};
+    return function innerModel(target) {
     // get the initialState & reducers & schedules
     const { state, reducer, saga } = new target();
 
@@ -24,7 +22,7 @@ function Model({
     // use decorator for render template, higher-order function
     const TargetComponent = connect(mapStateToProps)(template);
     target.prototype.render = () => {
-      return <TargetComponent {...props} />;
+      return <TargetComponent />;
     };
 
     target.prototype.namespace = namespace;

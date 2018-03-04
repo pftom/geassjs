@@ -11,7 +11,6 @@ export default function setup() {
 
   // instantation app 
   const app = new App(plugin);
-  console.log('app', app);
 
   // is app existence, export app for injectModel use
   if (app) {
@@ -23,9 +22,6 @@ export default function setup() {
 
   // add this framework default middlewares
   app.useAllMiddlewares(defaultMiddlewares, 'dev');
-
-  // add this framework default props
-  app.useAllProps([]);
 
   // return app instance
   return app;

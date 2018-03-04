@@ -1,8 +1,16 @@
-import Geass from './core/';
-import { App } from './components/';
+// export all react packages
+import React, { Component, PureComponent } from 'react';
+
+import Model from './model';
+import setup from './setup';
+
+export { 
+  React,
+  Component,
+  PureComponent,
+
+  Model,
+};
 
 
-const app = new Geass();
-
-app.start(App);
-
+export default setup;

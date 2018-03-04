@@ -27,8 +27,6 @@ export default class App {
     this.useAllEnhancers = plugin.useAllEnhancers.bind(plugin);
     this.useMiddleware =  plugin.useMiddleware.bind(plugin);
     this.useAllMiddlewares = plugin.useAllMiddlewares.bind(plugin);
-    this.useProp = plugin.useProp.bind(plugin);
-    this.useAllProps = plugin.useAllProps.bind(plugin);
   }
 
   start = (

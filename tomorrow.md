@@ -38,3 +38,9 @@ _createStore 允许提前创建Store，做配置 [√]
  ## 2018 年 3 月 04 日
 
  放弃全局共有 props ，因为实用性不是很强，而且很修改起来难度太大，综合考虑：暂时不予采用。
+
+ 根据新建test项目测试 geassjs-cli 需要的功能
+
+ npm脚本内部调用npm package 命令
+
+反复测试迭代改进geassjs.

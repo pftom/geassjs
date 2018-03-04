@@ -7,7 +7,7 @@ export default function wrapExport(
 ) {
   let store = null;
   if (process.env.NODE_ENV === 'production') {
-    const configureStore = require('./configureStore.prod');
+    const configureStore = require('./configureStore.prod').default;
     store = configureStore(
       initialState, 
       [...middlewares['prod'], ...middlewares['common']], 
@@ -15,7 +15,7 @@ export default function wrapExport(
       rootReducer,
     );
   } else {
-    const configureStore = require('./configureStore.dev');
+    const configureStore = require('./configureStore.dev').default;
     store = configureStore(
       initialState, 
       [...middlewares['dev'], ...middlewares['common']], 

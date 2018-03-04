@@ -2,14 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import createSagaMiddleware from 'redux-saga';
 import { Provider } from 'react-redux';
-import { applyMiddleware, compose } from 'redux';
-import { take } from 'redux-saga/effects';
+import { combineReducers } from 'redux';
 
 import registerServiceWorker from './registerServiceWorker';
 import configureStore from './store/configureStore';
 import {
-  addReducer,
-  addSaga,
+  rootReducer,
+  rootSaga,
 } from './util';
 
 export default class App {
@@ -36,22 +35,10 @@ export default class App {
     RootComponent, 
     initialState = {},
   ) => {
-    // store global reducer object, and can dynamic change
-    const rootReducer = {
-      // later add redux-route info
-      route: (state = {}, action) => { return state; },
-    };
-
-
-    // initial root saga
-    const rootSaga = function* () {
-      yield take('HELLO_GEASS');
-      console.log('Happy Hacking!');
-    }
 
     // if store is not created
     if (!this._store) {
-      this._createStore(initialState, rootReducer, rootSaga);
+      this._createStore(initialState, combineReducers(rootReducer), rootSaga);
     }
 
     // start rendering app
@@ -71,7 +58,7 @@ export default class App {
     // before start, all other middlewares is added,
     // so, sagaMiddleware is the last middleware in this._middlewars
     const sagaMiddleware = createSagaMiddleware();
-    this._plugin.useMiddleware(sagaMiddleware, 'common');
+    this.useMiddleware(sagaMiddleware, 'common');
 
     // construct single redux store
     this._store = configureStore(
@@ -92,26 +79,9 @@ export default class App {
         <RootComponent />
       </Provider>
     );
+
     // execulate init work
     ReactDOM.render(Root, document.getElementById('root'));
     registerServiceWorker();
-  }
-
-  _injectModel = (newComponent) => {
-    // if this newComponent have reducer item
-    if (newComponent.reducer) {
-      const newRootReducer = addReducer(newComponent);
-      this._store.replaceReducer(newRootReducer)
-    }
-  
-    // if this newComponent have saga item
-    if (newComponent.saga) {
-      const newRootSaga = addSaga(newComponent);
-  
-      const middlewares = this._middlewares;
-      const sagaMiddleware = middlewares[middlewares.length - 1];
-      // re-run the rootSaga
-      sagaMiddleware.run(newRootSaga);
-    }
   }
 }

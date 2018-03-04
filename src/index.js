@@ -1,7 +1,8 @@
 import Geass from './core/';
-import { App } from './components/'
+import { App } from './components/';
 
-const app = Geass();
+
+const app = new Geass();
 
 app.start(App);
 

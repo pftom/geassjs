@@ -1,8 +1,8 @@
 // export all react packages
 import React, { Component, PureComponent } from 'react';
 
-import { Model } from './model';
-const { setup } = require('./setup');
+import Model from './model';
+import setup from './setup';
 
 export { 
   React,

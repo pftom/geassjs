@@ -1,13 +1,22 @@
 import * as reduxSaga from 'redux-saga';
 import * as reduxSagaEffects from 'redux-saga/effects';
 import * as reduxSagaUtils from 'redux-saga/utils';
-import { combineReducers } from 'redux';
-
-// dynamic construct rootReducer
-const reducerObj = {};
+import { take } from 'redux-saga/effects';
 
 // dynamic construct sagas
 let sagas = [];
+
+// store global reducer object, and can dynamic change
+let rootReducer = {
+  // later add redux-route info
+  route: (state = {}, action) => { return state; },
+};
+
+// store global saga object, and can dynamic change
+let rootSaga = function* () {
+  yield take('HELLO_GEASS');
+  console.log('Happy Hacking!');
+}
 
 function createStandardReducer(namespace = '', initialState = {}, reducer = {}) {
   return function innerStandardReducer(state = initialState, action) {
@@ -56,8 +65,8 @@ function addReducer(newComponent) {
 
   // construt standard reducer function
   const standardizedReducer = createStandardReducer(namespace, state, reducer);
-  reducerObj[namespace] = standardizedReducer;
-  return combineReducers(reducerObj);
+  rootReducer[namespace] = standardizedReducer;
+  return rootReducer;
 }
 
 function createStandardWatchSaga(namespace, saga) {
@@ -102,12 +111,29 @@ function addSaga(newComponent) {
   }
 }
 
+// dynamic inject model
+function injectModel(newComponent) {
+  // if this newComponent have reducer item
+  if (newComponent.reducer) {
+    rootReducer = addReducer(newComponent);
+  }
+
+  // if this newComponent have saga item
+  if (newComponent.saga) {
+    rootSaga = addSaga(newComponent);
+  }
+}
+
 export {
   addReducer,
+  rootReducer,
 
   reduxSaga,
   reduxSagaEffects,
   reduxSagaUtils,
 
   addSaga,
+  rootSaga,
+
+  injectModel,  
 }

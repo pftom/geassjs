@@ -2,7 +2,8 @@ import App from './create';
 import Plugin from './plugin';
 import defaultEnhancers from './enhancers/';
 import defaultMiddlewares from './middlewares/';
-import { dynamicGetApp } from './model';
+
+export let appInstance = null;
 
 export default function setup() {
   // create plugin instance
@@ -14,7 +15,7 @@ export default function setup() {
 
   // is app existence, export app for injectModel use
   if (app) {
-    dynamicGetApp(app);
+    appInstance = app;
   }
 
   // add this framework default enhancers

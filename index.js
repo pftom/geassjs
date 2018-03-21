@@ -5,6 +5,8 @@ import setup, {
   PureComponent,
 } from './src/';
 
+const aaaaa = 2;
+
 export default setup;
 
 export {
@@ -12,4 +14,5 @@ export {
   React,
   Component,
   PureComponent,
+  aaaaa,
 }

@@ -1,18 +1,14 @@
-import setup, {
-  Model,
+// export all react packages
+import React, { Component, PureComponent } from 'react';
+
+import Model from './src/model';
+import setup from './src/setup';
+
+export { 
   React,
   Component,
   PureComponent,
-} from './src/';
 
-const aaaaa = 2;
-
+  Model,
+};
 export default setup;
-
-export {
-  Model,
-  React,
-  Component,
-  PureComponent,
-  aaaaa,
-}
